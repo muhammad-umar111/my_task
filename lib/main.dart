@@ -1,12 +1,9 @@
-import 'dart:js_interop';
-
 import 'package:apicall/get_data_screen/bloc/record_bloc.dart';
 import 'package:apicall/get_data_screen/bloc/record_bloc_event.dart';
 import 'package:apicall/get_data_screen/bloc/record_bloc_state.dart';
 import 'package:apicall/get_data_screen/model/comments_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 
 void main() {
   runApp(const MyApp());
@@ -43,30 +40,27 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text(title),
       ),
-      body: Center(
-          child: BlocBuilder(
+      body: Center(child: BlocBuilder<CommentsBloc,RecordState>(
         builder: (context, state) {
           if (state is InitialRecordState) {
             return Text('Click to Load');
           } else {
-            return MyWidget(comments: (state as LoadedRecordState).listOfComments);
+            return MyWidget(
+              comments: (state as LoadedRecordState).listOfComments,
+              commentsBloc: commentsBloc,
+            );
           }
         },
       )),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-         commentsBloc.add(FetchRecordEvent());
-        },
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
     );
   }
 }
 
 class MyWidget extends StatelessWidget {
-  const MyWidget({super.key, required this.comments});
+  const MyWidget(
+      {super.key, required this.comments, required this.commentsBloc});
   final List<Comments> comments;
+  final CommentsBloc commentsBloc;
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -74,6 +68,7 @@ class MyWidget extends StatelessWidget {
         itemCount: comments.length,
         itemBuilder: (context, index) {
           return ListTile(
+            onTap: () => commentsBloc.add(FetchRecordEvent(index: index)),
             leading: Text(comments[index].id.toString()),
             title: Text(comments[index].postId.toString()),
             subtitle: Text(comments[index].name.toString()),

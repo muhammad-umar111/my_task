@@ -5,14 +5,15 @@ import 'package:apicall/get_data_screen/model/comments_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CommentsBloc extends Bloc<RecordEvent, RecordState> {
-    List<Comments> list=[];
+  List<Comments> list = [];
 
   CommentsBloc() : super(InitialRecordState()) {
     CommentsApiProvider commentsApiProvider = CommentsApiProvider();
-     
+    commentsApiProvider.fetchComments().then((value) {
+      emit(LoadedRecordState(listOfComments: list));
+    });
     on<FetchRecordEvent>((event, emit) async {
-      List<Comments> comments = await commentsApiProvider.fetchComments();
-      list=comments;
+      list.removeAt(event.index);
       emit(LoadedRecordState(listOfComments: list));
     });
   }
