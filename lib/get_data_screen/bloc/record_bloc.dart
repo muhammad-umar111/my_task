@@ -10,11 +10,17 @@ class CommentsBloc extends Bloc<RecordEvent, RecordState> {
   CommentsBloc() : super(InitialRecordState()) {
     CommentsApiProvider commentsApiProvider = CommentsApiProvider();
     commentsApiProvider.fetchComments().then((value) {
+      list=value;
       emit(LoadedRecordState(listOfComments: list));
     });
     on<FetchRecordEvent>((event, emit) async {
-      list.removeAt(event.index);
+        commentsApiProvider.fetchComments().then((value) {
+      list=value;
+           list.removeAt(event.index);
       emit(LoadedRecordState(listOfComments: list));
+    
     });
+     
+
   }
 }
