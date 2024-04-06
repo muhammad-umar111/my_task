@@ -30,11 +30,11 @@ abstract class ApiProvider {
 class CommentsApiProvider extends ApiProvider {
   @override
   // TODO: implement apiUrl
-  String get apiUrl => '/albums';
+  String get apiUrl => '/comments';
 
   @override
   // TODO: implement baseUrl
-  String get baseUrl => 'https://jsonplaceholder.typicode.com';
+  String get baseUrl => '/commentshttps://jsonplaceholder.typicode.com/posts/1;
   Future<List<Comments>> fetchComments() async {
     List map = await _fetch() as List;
     return map.map((map) => Comments.fromMap(map)).toList();
